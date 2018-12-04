@@ -34,9 +34,9 @@ export default abstract class BaseDatabaseMigration {
    */
   private async *paginatedMap<T = any>(count, pageSize): AsyncIterableIterator<any> {
     let index = 0;
-
+ 
     while (index < count) {
-      yield this.map<T>().take(pageSize).skip(index).getMany();
+      yield this.map<T>().take(pageSize).skip(pageSize).getMany();
       index += pageSize;
     }
   }
