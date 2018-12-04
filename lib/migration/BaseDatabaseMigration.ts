@@ -36,7 +36,8 @@ export default abstract class BaseDatabaseMigration {
     let index = 0;
  
     while (index < count) {
-      yield this.map<T>().take(pageSize).skip(pageSize).getMany();
+      const offset = index === 0 ? 0 : pageSize;
+      yield this.map<T>().take(pageSize).skip(offset).getMany();
       index += pageSize;
     }
   }
