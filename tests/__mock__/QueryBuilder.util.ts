@@ -1,7 +1,7 @@
 export default class QueryBuilderMock {
   protected values: any[];
-  protected pageSize: number;
-  protected index: number;
+  protected pageSize: number = 50;
+  protected index: number = 0;
 
   constructor(values?: any) {
     this.values = values || [1, 2];

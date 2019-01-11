@@ -11,8 +11,8 @@ describe('lib.jobs.DatabaseMigrationJob', () => {
     constructor(name = 'TestSuccessMigration') {
       super(name);
     }
-    async hasWork(): Promise<boolean> {
-      return true;
+    async hasWork(): Promise<number> {
+      return 1;
     }
      
     map() {

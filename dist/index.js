@@ -1,7 +1,9 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseDatabaseMigration_1 = require("./migration/BaseDatabaseMigration");
-exports.BaseDatabaseMigration = BaseDatabaseMigration_1.default;
-const DatabaseMigrationJob_1 = require("./jobs/DatabaseMigrationJob");
+__export(require("./migration"));
+var DatabaseMigrationJob_1 = require("./jobs/DatabaseMigrationJob");
 exports.DatabaseMigrationJob = DatabaseMigrationJob_1.default;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9saWIvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSw2RUFBc0U7QUFHdkMsZ0NBSHhCLCtCQUFxQixDQUd3QjtBQUZwRCxzRUFBK0Q7QUFFdEQsK0JBRkYsOEJBQW9CLENBRUUiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgQmFzZURhdGFiYXNlTWlncmF0aW9uIGZyb20gJy4vbWlncmF0aW9uL0Jhc2VEYXRhYmFzZU1pZ3JhdGlvbic7XG5pbXBvcnQgRGF0YWJhc2VNaWdyYXRpb25Kb2IgZnJvbSAnLi9qb2JzL0RhdGFiYXNlTWlncmF0aW9uSm9iJztcblxuZXhwb3J0IHsgRGF0YWJhc2VNaWdyYXRpb25Kb2IsIEJhc2VEYXRhYmFzZU1pZ3JhdGlvbiB9OyJdfQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9saWIvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBQSxpQ0FBNEI7QUFDNUIsb0VBQTJHO0FBQWxHLHNEQUFBLE9BQU8sQ0FBd0IiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgKiBmcm9tICcuL21pZ3JhdGlvbic7XG5leHBvcnQgeyBkZWZhdWx0IGFzIERhdGFiYXNlTWlncmF0aW9uSm9iLCBEYXRhYmFzZU1pZ3JhdGlvbkpvYk9wdGlvbnMgfSBmcm9tICcuL2pvYnMvRGF0YWJhc2VNaWdyYXRpb25Kb2InO1xuIl19

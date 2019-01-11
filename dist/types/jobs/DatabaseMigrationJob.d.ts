@@ -1,11 +1,12 @@
 import Server from 'ts-framework';
 import { Job, JobOptions } from 'ts-framework-common';
+import { SqlMigration, BaseDatabaseMigration } from '../migration';
 export interface DatabaseMigrationJobOptions extends JobOptions {
     verbose?: boolean;
     exitOnError?: boolean;
     migration?: {
         auto: boolean;
-        pipeline: any[];
+        pipeline: (BaseDatabaseMigration | SqlMigration)[];
     };
 }
 export default class DatabaseMigrationJob extends Job {
