@@ -1,12 +1,13 @@
-import { BaseDatabaseMigration } from '../lib';
+import { SqlMigration } from '../lib';
+import QueryBuilderMock from './__mock__/QueryBuilder.util';
 
-describe('lib.migration.BaseDatabaseMigration', () => {
+describe('lib.migration.SqlMigration', () => {
 
   it('should handle a success properly', async () => {
     /** A test migration that will always succeed */
     let hasMigrated = false;
     let hasReverted = false;
-    class TestSuccessMigration extends BaseDatabaseMigration {
+    class TestSuccessMigration extends SqlMigration {
       constructor() {
         super('TestSuccessMigration');
       }
@@ -14,8 +15,8 @@ describe('lib.migration.BaseDatabaseMigration', () => {
       async hasWork(): Promise<number> {
         return 1;
       }
-      async map(): Promise<any[]> {
-        return [1, 2];
+      map() {
+        return <any>(new QueryBuilderMock([1]));
       }
       async migrate(data: any[]): Promise<void> {
         hasMigrated = true;
@@ -38,7 +39,8 @@ describe('lib.migration.BaseDatabaseMigration', () => {
     /** A test migration that will always succeed */
     let hasMigrated = false;
     let hasReverted = false;
-    class TestSuccessMigration extends BaseDatabaseMigration {
+    class TestSuccessMigration extends SqlMigration {
+
       constructor() {
         super('TestSuccessMigration');
       }
@@ -46,9 +48,11 @@ describe('lib.migration.BaseDatabaseMigration', () => {
       async hasWork(): Promise<number> {
         return 1;
       }
-      async map(): Promise<any[]> {
-        return [];
+
+      map(): any {
+        return new QueryBuilderMock([]);
       }
+
       async migrate(data: any[]): Promise<void> {
         hasMigrated = true;
         return;
@@ -70,7 +74,8 @@ describe('lib.migration.BaseDatabaseMigration', () => {
     let hasCrashed = false;
 
     /** A test migration that will always succeed */
-    class TestMapErrorMigration extends BaseDatabaseMigration {
+    class TestMapErrorMigration extends SqlMigration {
+
       constructor() {
         super('TestMapErrorMigration');
       }
@@ -78,7 +83,7 @@ describe('lib.migration.BaseDatabaseMigration', () => {
       async hasWork(): Promise<number> {
         return 1;
       }
-      async map(): Promise<any[]> {
+      map(): any {
         hasPassed = true;
         throw new Error("Method not implemented.");
       }
@@ -107,7 +112,8 @@ describe('lib.migration.BaseDatabaseMigration', () => {
     let hasCrashed = false;
 
     /** A test migration that will always succeed */
-    class TestMapErrorMigration extends BaseDatabaseMigration {
+    class TestMapErrorMigration extends SqlMigration {
+
       constructor() {
         super('TestMapErrorMigration');
       }
@@ -115,8 +121,8 @@ describe('lib.migration.BaseDatabaseMigration', () => {
       async hasWork(): Promise<number> {
         return 1;
       }
-      async map(): Promise<any[]> {
-        return [1, 2, 3];
+      map(): any {
+        return new QueryBuilderMock([1, 2, 3]);
       }
       async migrate(data: any[]): Promise<void> {
         hasMigrated = true;
@@ -144,7 +150,7 @@ describe('lib.migration.BaseDatabaseMigration', () => {
     let hasCrashed = false;
 
     /** A test migration that will always succeed */
-    class TestMapErrorMigration extends BaseDatabaseMigration {
+    class TestMapErrorMigration extends SqlMigration {
       constructor() {
         super('TestMapErrorMigration');
       }
@@ -152,7 +158,7 @@ describe('lib.migration.BaseDatabaseMigration', () => {
       async hasWork(): Promise<number> {
         return 1;
       }
-      async map(): Promise<any[]> {
+      map(): any {
         return [1, 2, 3];
       }
       async migrate(data: any[]): Promise<void> {

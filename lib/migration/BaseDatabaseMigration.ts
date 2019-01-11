@@ -1,45 +1,15 @@
-import { SelectQueryBuilder } from 'typeorm';
-
-export interface DatabaseMigrationOptions {
-  transactionSize?: number;
-  rowsPerInsert?: number;
-}
-
 export default abstract class BaseDatabaseMigration {
-  protected readonly transactionSize: number;
-  protected readonly rowsPerInsert: number;
-
-  constructor(public name: String, public options: DatabaseMigrationOptions = {transactionSize: 50, rowsPerInsert: 50}) {
-    this.transactionSize = options.transactionSize || 50;
-    this.rowsPerInsert = options.rowsPerInsert || 50;
-  }
+  constructor(public name: String, public options: any = {}) {}
 
   /**
    * This method determines whether this script has any work to be done.
    */
-  public abstract async hasWork(): Promise<boolean>;
+  public abstract async hasWork(): Promise<number>;
 
   /**
-   * Creates a QueryBuilder for the recors that should be migrated,
-   * will only be called is ```hasWork()``` have returned ```true```.
+   * Maps the the documents that should be migrated, will only be called is ```hasWork()``` have returned ```true```.
    */
-  public abstract map<T = any>(): SelectQueryBuilder<T>;
-
-  /**
-   * Creates an asyncIterator for the ```map()``` QueryBuilder for performing a paginated query
-   * over the records
-   * 
-   * @param count The number of records to be iterated over
-   * @param pageSize The number of records to be taken on each iteration
-   */
-  private async *paginatedMap<T = any>(count, pageSize): AsyncIterableIterator<any> {
-    let index = 0;
- 
-    while (index < count) {
-      yield this.map<T>().take(pageSize).getMany();
-      index += pageSize;
-    }
-  }
+  public abstract async map(): Promise<any[]>;
 
   /**
    * Handles the migrations of the mapped documents.
@@ -58,27 +28,27 @@ export default abstract class BaseDatabaseMigration {
   /**
    * Runs the migration step safely, reverting the changes in the case of errors.
    * 
+   * @returns List of ids of the documents migrated.
    */
-  public async run(): Promise<void> {
+  public async run(): Promise<any[]> {
+    let data: string[];
+
     try {
-      const count = await this.map().getCount();
-
-      for await (const dataSlice of this.paginatedMap(count, this.rowsPerInsert)) {
-        if (dataSlice && dataSlice.length) {
-
-          try {
-            await this.migrate(dataSlice);
-
-          } catch (error) {
-            // TODO: Handle this case properly
-            await this.revert(error, dataSlice);
-            throw error;
-          }
-        }
-      }
+      data = await this.map();
     } catch (error) {
       // TODO: Handle mapping errors properly
       throw error;
+    }
+
+    if (data && data.length) {
+      try {
+        await this.migrate(data);
+        return data;
+      } catch (error) {
+        // TODO: Handle this case properly
+        await this.revert(error, data);
+        throw error;
+      }
     }
   }
 }

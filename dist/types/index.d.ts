@@ -1,3 +1,2 @@
-import BaseDatabaseMigration from './migration/BaseDatabaseMigration';
-import DatabaseMigrationJob from './jobs/DatabaseMigrationJob';
-export { DatabaseMigrationJob, BaseDatabaseMigration };
+export * from './migration';
+export { default as DatabaseMigrationJob, DatabaseMigrationJobOptions } from './jobs/DatabaseMigrationJob';

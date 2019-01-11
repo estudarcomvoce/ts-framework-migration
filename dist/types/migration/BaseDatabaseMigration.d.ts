@@ -1,31 +1,15 @@
-import { SelectQueryBuilder } from 'typeorm';
-export interface DatabaseMigrationOptions {
-    transactionSize?: number;
-    rowsPerInsert?: number;
-}
 export default abstract class BaseDatabaseMigration {
     name: String;
-    options: DatabaseMigrationOptions;
-    protected readonly transactionSize: number;
-    protected readonly rowsPerInsert: number;
-    constructor(name: String, options?: DatabaseMigrationOptions);
+    options: any;
+    constructor(name: String, options?: any);
     /**
      * This method determines whether this script has any work to be done.
      */
-    abstract hasWork(): Promise<boolean>;
+    abstract hasWork(): Promise<number>;
     /**
-     * Creates a QueryBuilder for the recors that should be migrated,
-     * will only be called is ```hasWork()``` have returned ```true```.
+     * Maps the the documents that should be migrated, will only be called is ```hasWork()``` have returned ```true```.
      */
-    abstract map<T = any>(): SelectQueryBuilder<T>;
-    /**
-     * Creates an asyncIterator for the ```map()``` QueryBuilder for performing a paginated query
-     * over the records
-     *
-     * @param count The number of records to be iterated over
-     * @param pageSize The number of records to be taken on each iteration
-     */
-    private paginatedMap<T>(count, pageSize);
+    abstract map(): Promise<any[]>;
     /**
      * Handles the migrations of the mapped documents.
      *
@@ -41,6 +25,7 @@ export default abstract class BaseDatabaseMigration {
     /**
      * Runs the migration step safely, reverting the changes in the case of errors.
      *
+     * @returns List of ids of the documents migrated.
      */
-    run(): Promise<void>;
+    run(): Promise<any[]>;
 }

@@ -1,7 +1,7 @@
 import Server from 'ts-framework';
 import { Logger as BaseLogger, Job, JobOptions } from 'ts-framework-common';
-import BaseDatabaseMigration from '../migration/BaseDatabaseMigration';
 import AsyncUtil from '../util/AsyncUtil';
+import { SqlMigration, BaseDatabaseMigration } from '../migration';
 
 const Logger = BaseLogger.getInstance();
 
@@ -10,7 +10,7 @@ export interface DatabaseMigrationJobOptions extends JobOptions {
   exitOnError?: boolean;
   migration?: {
     auto: boolean,
-    pipeline: any[],
+    pipeline: (BaseDatabaseMigration | SqlMigration)[],
   }
 }
 
@@ -32,7 +32,7 @@ export default class DatabaseMigrationJob extends Job {
     } else if (this.options.migration) {
       const pipeline = this.options.migration.pipeline;
 
-      const hasWorkQueue = await Promise.all(pipeline.map((step: BaseDatabaseMigration) => {
+      const hasWorkQueue = await Promise.all(pipeline.map(step => {
         return step.hasWork().then(count => ({ name: step.name, count }));
       })) as any[];
 
@@ -58,7 +58,7 @@ export default class DatabaseMigrationJob extends Job {
 
         // Run the migrations in series for expliciting defining the order of the execution
         // This may be important because migrations may depend on one another
-        await AsyncUtil.mapSeries(pipeline, async (step) => step.run());
+        await AsyncUtil.mapSeries(pipeline, async (step: (BaseDatabaseMigration | SqlMigration)) => step.run());
       } else if (hasWork) {
         if (this.options.exitOnError) {
           server.logger.error('Database needs migration', details);
