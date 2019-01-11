@@ -6,6 +6,7 @@ export interface SqlMigrationOptions {
 export default abstract class SqlMigration {
     name: String;
     options: SqlMigrationOptions;
+    protected postMigrationActions: (() => Promise<void>)[];
     constructor(name: String, options?: SqlMigrationOptions);
     /**
      * This method determines whether this script has any work to be done.
