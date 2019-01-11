@@ -1,4 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
+import AsyncUtil from '../util/AsyncUtil';
 
 export interface SqlMigrationOptions {
   transactionSize?: number;
@@ -6,6 +7,8 @@ export interface SqlMigrationOptions {
 }
 
 export default abstract class SqlMigration {
+  protected postMigrationActions: (() => Promise<void>)[]
+
   constructor(
     public name: String,
     public options: SqlMigrationOptions = {transactionSize: 50, rowsPerInsert: 50}
@@ -76,6 +79,16 @@ export default abstract class SqlMigration {
     } catch (error) {
       // TODO: Handle mapping errors properly
       throw error;
+    }
+
+    // Post-migration actions
+    if (this.postMigrationActions && this.postMigrationActions.length) {
+      try {
+        AsyncUtil.mapSeries(this.postMigrationActions, async (action: () => Promise<void>) => action())
+      } catch(error) {
+        // TODO: Handle post-migration errors
+        throw error;
+      }
     }
   }
 }
